@@ -4,9 +4,9 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 import base64
 import os
 
-class MnemonicEncryption:
+class SecretEncryption:
     @staticmethod
-    def encrypt(mnemonic: str, password: str) -> str:
+    def encrypt(message: str, password: str) -> str:
         salt = os.urandom(16)
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
@@ -17,7 +17,7 @@ class MnemonicEncryption:
         key = kdf.derive(password.encode())
         aesgcm = AESGCM(key)
         nonce = os.urandom(12)
-        encrypted = aesgcm.encrypt(nonce, mnemonic.encode(), None)
+        encrypted = aesgcm.encrypt(nonce, message.encode(), None)
         result = salt + nonce + encrypted
         return base64.b64encode(result).decode('utf-8')
     

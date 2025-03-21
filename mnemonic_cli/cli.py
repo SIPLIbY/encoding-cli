@@ -2,19 +2,19 @@
 
 import argparse
 from getpass import getpass
-from .core import MnemonicEncryption
+from .core import SecretEncryption
 
 def main():
-    parser = argparse.ArgumentParser(description='Encrypt and decrypt mnemonic phrases')
+    parser = argparse.ArgumentParser(description='Encrypt and decrypt secret phrases')
     subparsers = parser.add_subparsers(dest='command', required=True)
 
     # Encode command
-    encode_parser = subparsers.add_parser('encode', help='Encrypt a mnemonic phrase')
-    encode_parser.add_argument('-m', '--mnemonic', required=True, help='Mnemonic phrase to encrypt')
+    encode_parser = subparsers.add_parser('encode', help='Encrypt a secret phrase')
+    encode_parser.add_argument('-m', '--message', required=False, help='Secret phrase to encrypt')
 
     # Decode command
-    decode_parser = subparsers.add_parser('decode', help='Decrypt an encrypted mnemonic')
-    decode_parser.add_argument('-m', '--message', required=True, help='Encrypted message to decrypt')
+    decode_parser = subparsers.add_parser('decode', help='Decrypt an encrypted secret')
+    decode_parser.add_argument('-m', '--message', required=False, help='Secret message to decrypt')
 
     # Encode file command
     encode_file_parser = subparsers.add_parser('encode-file', help='Encrypt a text file')
@@ -29,17 +29,21 @@ def main():
     args = parser.parse_args()
 
     try:
-        password = getpass('Enter password: ')
         if args.command == 'encode':
-            encrypted = MnemonicEncryption.encrypt(args.mnemonic, password)
+            message = args.message if args.message else getpass('Enter your secret phrase: ')
+            password = getpass('Enter password: ')
+            encrypted = SecretEncryption.encrypt(message, password)
             print(encrypted)
         elif args.command == 'decode':
-            decrypted = MnemonicEncryption.decrypt(args.message, password)
+            message = args.message if args.message else getpass('Enter encrypted message: ')
+            password = getpass('Enter password: ')
+            decrypted = SecretEncryption.decrypt(message, password)
             print(decrypted)
         elif args.command == 'encode-file':
             with open(args.input, 'r') as f:
                 content = f.read()
-            encrypted = MnemonicEncryption.encrypt(content, password)
+            password = getpass('Enter password: ')
+            encrypted = SecretEncryption.encrypt(content, password)
             if args.output:
                 with open(args.output, 'w') as f:
                     f.write(encrypted)
@@ -49,7 +53,8 @@ def main():
         elif args.command == 'decode-file':
             with open(args.input, 'r') as f:
                 encrypted_content = f.read()
-            decrypted = MnemonicEncryption.decrypt(encrypted_content, password)
+            password = getpass('Enter password: ')
+            decrypted = SecretEncryption.decrypt(encrypted_content, password)
             if args.output:
                 with open(args.output, 'w') as f:
                     f.write(decrypted)
