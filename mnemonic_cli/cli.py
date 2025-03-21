@@ -19,12 +19,12 @@ def main():
     # Encode file command
     encode_file_parser = subparsers.add_parser('encode-file', help='Encrypt a text file')
     encode_file_parser.add_argument('-i', '--input', required=True, help='Input file path')
-    encode_file_parser.add_argument('-o', '--output', required=True, help='Output file path')
+    encode_file_parser.add_argument('-o', '--output', required=False, help='Output file path (optional)')
 
     # Decode file command
     decode_file_parser = subparsers.add_parser('decode-file', help='Decrypt an encrypted file')
     decode_file_parser.add_argument('-i', '--input', required=True, help='Input encrypted file path')
-    decode_file_parser.add_argument('-o', '--output', required=True, help='Output file path')
+    decode_file_parser.add_argument('-o', '--output', required=False, help='Output file path (optional)')
 
     args = parser.parse_args()
 
@@ -40,16 +40,22 @@ def main():
             with open(args.input, 'r') as f:
                 content = f.read()
             encrypted = MnemonicEncryption.encrypt(content, password)
-            with open(args.output, 'w') as f:
-                f.write(encrypted)
-            print(f"File encrypted successfully. Output saved to: {args.output}")
+            if args.output:
+                with open(args.output, 'w') as f:
+                    f.write(encrypted)
+                print(f"File encrypted successfully. Output saved to: {args.output}")
+            else:
+                print(encrypted)
         elif args.command == 'decode-file':
             with open(args.input, 'r') as f:
                 encrypted_content = f.read()
             decrypted = MnemonicEncryption.decrypt(encrypted_content, password)
-            with open(args.output, 'w') as f:
-                f.write(decrypted)
-            print(f"File decrypted successfully. Output saved to: {args.output}")
+            if args.output:
+                with open(args.output, 'w') as f:
+                    f.write(decrypted)
+                print(f"File decrypted successfully. Output saved to: {args.output}")
+            else:
+                print(decrypted)
     except Exception as e:
         print(f"Error: {str(e)}")
         exit(1)
