@@ -8,7 +8,8 @@ The easiest way to install Mnemonic CLI is using [pipx](https://pypa.github.io/p
 
 ```bash
 git clone https://github.com/SIPLIbY/encoding-cli.git
-pipx install encoding-cli
+cd encoding-cli
+pipx install .
 ```
 
 If you don't have pipx installed, you can install it first:
