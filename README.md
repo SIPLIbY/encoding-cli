@@ -7,7 +7,8 @@ A command-line interface tool for managing your mnemonic phrases securely.
 The easiest way to install Mnemonic CLI is using [pipx](https://pypa.github.io/pipx/):
 
 ```bash
-pipx install mnemonic-cli
+git clone https://github.com/SIPLIbY/encoding-cli.git
+pipx install encoding-cli
 ```
 
 If you don't have pipx installed, you can install it first:
@@ -38,5 +39,5 @@ python -m pipx ensurepath
 After installation, you can use the tool by running:
 
 ```bash
-mnemonic-cli [command]
+mnemonic [command]
 ```
